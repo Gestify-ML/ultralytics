@@ -43,8 +43,14 @@ FORMATS_HELP_MSG = f"Supported formats are:\nimages: {IMG_FORMATS}\nvideos: {VID
 
 def img2label_paths(img_paths):
     """Define label paths as a function of image paths."""
-    sa, sb = f"{os.sep}images{os.sep}", f"{os.sep}labels{os.sep}"  # /images/, /labels/ substrings
-    return [sb.join(x.rsplit(sa, 1)).rsplit(".", 1)[0] + ".txt" for x in img_paths]
+    img_paths = list(img_paths)
+    # Define label paths as a function of image paths
+    if "train" in img_paths[0]:
+        return [x.replace("train", "train_labels").replace(".jpg", ".txt") for x in img_paths]
+    elif "test" in img_paths[0]:
+        return [x.replace("test", "test_labels").replace(".jpg", ".txt") for x in img_paths]
+    elif "val" in img_paths[0]:
+        return [x.replace("val", "val_labels").replace(".jpg", ".txt") for x in img_paths]
 
 
 def get_hash(paths):
